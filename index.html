@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jsPDF + AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-6">
+
+  <!-- Student Section -->
+  <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-md mb-6" id="studentSection">
+    <h2 class="text-2xl font-bold text-center mb-4">📌 Student Attendance</h2>
+    <label for="rollNo" class="block mb-2">Enter EC Number</label>
+    <input id="rollNo" type="text" class="w-full p-2 border rounded-lg mb-3" placeholder="EC Number">
+    <button onclick="submitAttendance()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg">
+      Submit Attendance
+    </button>
+    <div id="spinner" class="hidden text-center mt-3">⏳ Saving...</div>
+    <p id="responseMsg" class="text-center mt-2"></p>
+  </div>
+
+  <!-- Admin Login -->
+  <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-md mb-6" id="loginSection">
+    <h2 class="text-2xl font-bold text-center mb-4">🔑 Admin Login</h2>
+    <input id="adminUsername" type="text" class="w-full p-2 border rounded-lg mb-3" placeholder="Username">
+    <input id="adminPassword" type="password" class="w-full p-2 border rounded-lg mb-3" placeholder="Password">
+    <button onclick="adminLogin()" class="w-full bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg">
+      Login
+    </button>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-3xl hidden" id="adminSection">
+    <h2 class="text-2xl font-bold text-center mb-4">📊 Attendance Records</h2>
+
+    <div class="flex gap-2 mb-4">
+      <button onclick="exportToPDF()" class="flex-1 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg">Export PDF</button>
+      <button onclick="exportToExcel()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg">Export Excel</button>
+      <button onclick="deleteAllData()" class="flex-1 bg-gray-700 hover:bg-gray-800 text-white p-2 rounded-lg">Delete All</button>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table id="attendanceTable" class="min-w-full border border-gray-300 text-sm">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border p-2">EC Number</th>
+            <th class="border p-2">Date</th>
+            <th class="border p-2">Time</th>
+            <th class="border p-2">Image</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  let attendanceRecords = [];
+
+  // ✅ Student Attendance
+  function submitAttendance() {
+    const rollNo = document.getElementById("rollNo").value.trim();
+    const responseMsg = document.getElementById("responseMsg");
+
+    responseMsg.textContent = "";
+    responseMsg.classList.remove("text-red-600", "text-green-600");
+
+    if (rollNo === "") {
+      responseMsg.textContent = "❌ Please enter your EC Number.";
+      responseMsg.classList.add("text-red-600");
+      return;
+    }
+
+    if (!/^[0-9]{1,6}$/.test(rollNo)) {
+      responseMsg.textContent = "❌ EC Number must be numeric (max 6 digits).";
+      responseMsg.classList.add("text-red-600");
+      return;
+    }
+
+    if (attendanceRecords.some(rec => rec.rollNo === rollNo)) {
+      responseMsg.textContent = "⚠️ Attendance already marked for this EC Number.";
+      responseMsg.classList.add("text-red-600");
+      return;
+    }
+
+    document.getElementById("spinner").classList.remove("hidden");
+    responseMsg.textContent = "⏳ Submitting...";
+    responseMsg.classList.add("text-indigo-600");
+
+    setTimeout(() => {
+      document.getElementById("spinner").classList.add("hidden");
+
+      const record = {
+        rollNo: rollNo,
+        time: new Date().toLocaleTimeString(),
+        date: new Date().toLocaleDateString(),
+        img: `https://picsum.photos/seed/${rollNo}/40`
+      };
+      attendanceRecords.push(record);
+
+      responseMsg.textContent = "✅ Attendance marked successfully!";
+      responseMsg.classList.remove("text-indigo-600");
+      responseMsg.classList.add("text-green-600");
+
+      renderAttendanceTable();
+    }, 1000);
+  }
+
+  // ✅ Render Attendance Table
+  function renderAttendanceTable() {
+    const tbody = document.getElementById("attendanceBody");
+    tbody.innerHTML = "";
+
+    attendanceRecords.forEach(r => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td class="border p-2 text-center">${r.rollNo}</td>
+        <td class="border p-2 text-center">${r.date}</td>
+        <td class="border p-2 text-center">${r.time}</td>
+        <td class="border p-2 text-center"><img src="${r.img}" class="w-10 h-10 rounded-full mx-auto"/></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ✅ Admin Login
+  function adminLogin() {
+    const username = document.getElementById("adminUsername").value.trim();
+    const password = document.getElementById("adminPassword").value.trim();
+
+    if (username === "" || password === "") {
+      alert("⚠️ Please enter both Username and Password.");
+      return;
+    }
+
+    if (username !== "admin" || password !== "1234") {
+      alert("❌ Invalid username or password.");
+      return;
+    }
+
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("adminSection").classList.remove("hidden");
+  }
+
+  // ✅ Export PDF
+  function exportToPDF() {
+    if (attendanceRecords.length === 0) {
+      alert("⚠️ No data to export.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text("Attendance Report", 14, 16);
+
+    const tableData = attendanceRecords.map(r => [r.rollNo, r.date, r.time]);
+    doc.autoTable({
+      head: [["EC Number", "Date", "Time"]],
+      body: tableData
+    });
+
+    doc.save("Attendance.pdf");
+  }
+
+  // ✅ Export Excel (CSV)
+  function exportToExcel() {
+    if (attendanceRecords.length === 0) {
+      alert("⚠️ No data to export.");
+      return;
+    }
+
+    let csvContent = "data:text/csv;charset=utf-8,EC Number,Date,Time\n";
+    attendanceRecords.forEach(r => {
+      csvContent += `${r.rollNo},${r.date},${r.time}\n`;
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "Attendance.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // ✅ Delete All
+  function deleteAllData() {
+    if (confirm("⚠️ Delete all attendance records?")) {
+      attendanceRecords = [];
+      renderAttendanceTable();
+      alert("✅ All data cleared.");
+    }
+  }
+</script>
+
+</body>
+</html>

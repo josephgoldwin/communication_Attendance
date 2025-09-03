@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Attendance System</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      color: white;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+      border-radius: 0 0 20px 20px;
+    }
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: transform 0.3s;
+      margin-bottom: 20px;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card-header {
+      border-radius: 15px 15px 0 0 !important;
+      font-weight: 600;
+    }
+    .btn {
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .table-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    footer {
+      background-color: #343a40;
+      color: white;
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+    }
+    .form-section {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .section-title {
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #dee2e6;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-clipboard-check me-2"></i>Smart Attendance
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#studentSection"><i class="fas fa-user-graduate me-1"></i> Student</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#loginSection"><i class="fas fa-lock me-1"></i> Admin</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold">Smart Attendance System</h1>
+      <p class="lead">Efficient, modern, and easy-to-use attendance tracking for educational institutions</p>
+      <div class="mt-4">
+        <a href="#studentSection" class="btn btn-light btn-lg me-2"><i class="fas fa-pen me-1"></i> Mark Attendance</a>
+        <a href="#loginSection" class="btn btn-outline-light btn-lg"><i class="fas fa-chart-bar me-1"></i> View Records</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Student Section -->
+    <div class="card mb-4" id="studentSection">
+      <div class="card-header bg-primary text-white">
+        <i class="fas fa-user-graduate me-2"></i> Student Attendance
+      </div>
+      <div class="card-body">
+        <div class="form-section">
+          <div class="section-title">Student Information</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="ecNo" class="form-label">EC Number *</label>
+              <input id="ecNo" type="text" class="form-control" placeholder="Enter EC Number" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="studentName" class="form-label">Student Name *</label>
+              <input id="studentName" type="text" class="form-control" placeholder="Enter Full Name" required>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="gender" class="form-label">Gender *</label>
+              <select id="gender" class="form-select" required>
+                <option value="" selected disabled>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="mobileNo" class="form-label">Mobile Number *</label>
+              <input id="mobileNo" type="tel" class="form-control" placeholder="Enter Mobile Number" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-section">
+          <div class="section-title">Training Information</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="technicalStaff" class="form-label">Technical Staff Name *</label>
+              <input id="technicalStaff" type="text" class="form-control" placeholder="Enter Technical Staff Name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="coordinator" class="form-label">Coordinator Name *</label>
+              <input id="coordinator" type="text" class="form-control" placeholder="Enter Coordinator Name" required>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="batchTiming" class="form-label">Batch Timing *</label>
+              <select id="batchTiming" class="form-select" required>
+                <option value="" selected disabled>Select Batch Timing</option>
+                <option value="9:00 AM - 10:00 AM">9:00 AM - 10:00 AM</option>
+                <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                <option value="12:00 PM - 1:00 PM">12:00 PM - 1:00 PM</option>
+                <option value="2:00 PM - 3:00 PM">2:00 PM - 3:00 PM</option>
+                <option value="3:00 PM - 4:00 PM">3:00 PM - 4:00 PM</option>
+                <option value="4:00 PM - 5:00 PM">4:00 PM - 5:00 PM</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date & Time</label>
+              <input type="text" class="form-control" id="currentDateTime" readonly>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="submitAttendance()" class="btn btn-primary w-100 py-2">
+          <span id="submitText">Submit Attendance</span>
+          <span id="spinner" class="spinner ms-2 d-none"></span>
+        </button>
+        <div id="responseMsg" class="alert mt-3 mb-0 d-none"></div>
+      </div>
+    </div>
+
+    <!-- Admin Login -->
+    <div class="card mb-4" id="loginSection">
+      <div class="card-header bg-success text-white">
+        <i class="fas fa-lock me-2"></i> Admin Login
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="adminUsername" class="form-label">Username</label>
+          <input id="adminUsername" type="text" class="form-control" placeholder="Admin username">
+        </div>
+        <div class="mb-3">
+          <label for="adminPassword" class="form-label">Password</label>
+          <input id="adminPassword" type="password" class="form-control" placeholder="Admin password">
+        </div>
+        <button onclick="adminLogin()" class="btn btn-success w-100">Login</button>
+      </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="card mb-4 d-none" id="adminSection">
+      <div class="card-header bg-dark text-white">
+        <i class="fas fa-chart-bar me-2"></i> Attendance Records
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2 d-md-flex mb-4">
+          <button onclick="exportToPDF()" class="btn btn-danger flex-fill">
+            <i class="fas fa-file-pdf me-2"></i>Export PDF
+          </button>
+          <button onclick="exportToExcel()" class="btn btn-success flex-fill">
+            <i class="fas fa-file-excel me-2"></i>Export Excel
+          </button>
+          <button onclick="deleteAllData()" class="btn btn-outline-dark flex-fill">
+            <i class="fas fa-trash me-2"></i>Delete All
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table id="attendanceTable" class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>EC Number</th>
+                <th>Student Name</th>
+                <th>Gender</th>
+                <th>Mobile No</th>
+                <th>Technical Staff</th>
+                <th>Coordinator</th>
+                <th>Batch Timing</th>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center mt-5">
+    <div class="container">
+      <p>&copy; 2023 Smart Attendance System. All rights reserved.</p>
+      <div class="mt-2">
+        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- jsPDF + AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    let attendanceRecords = [];
+    
+    // Update date and time in real-time
+    function updateDateTime() {
+      const now = new Date();
+      const dateTimeStr = now.toLocaleString();
+      document.getElementById('currentDateTime').value = dateTimeStr;
+    }
+    
+    // Initialize date time and update every second
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    // ✅ Student Attendance
+    function submitAttendance() {
+      const ecNo = document.getElementById("ecNo").value.trim();
+      const studentName = document.getElementById("studentName").value.trim();
+      const gender = document.getElementById("gender").value;
+      const mobileNo = document.getElementById("mobileNo").value.trim();
+      const technicalStaff = document.getElementById("technicalStaff").value.trim();
+      const coordinator = document.getElementById("coordinator").value.trim();
+      const batchTiming = document.getElementById("batchTiming").value;
+      
+      const responseMsg = document.getElementById("responseMsg");
+      const spinner = document.getElementById("spinner");
+      const submitText = document.getElementById("submitText");
+
+      responseMsg.textContent = "";
+      responseMsg.classList.add("d-none");
+      responseMsg.classList.remove("alert-success", "alert-danger", "alert-warning");
+
+      // Validation
+      if (!ecNo || !studentName || !gender || !mobileNo || !technicalStaff || !coordinator || !batchTiming) {
+        showResponse("❌ Please fill all required fields.", "danger");
+        return;
+      }
+
+      if (!/^[0-9]{1,6}$/.test(ecNo)) {
+        showResponse("❌ EC Number must be numeric (max 6 digits).", "danger");
+        return;
+      }
+
+      if (!/^[0-9]{10}$/.test(mobileNo)) {
+        showResponse("❌ Mobile Number must be 10 digits.", "danger");
+        return;
+      }
+
+      if (attendanceRecords.some(rec => rec.ecNo === ecNo)) {
+        showResponse("⚠️ Attendance already marked for this EC Number.", "warning");
+        return;
+      }
+
+      // Show loading state
+      spinner.classList.remove("d-none");
+      submitText.textContent = "Submitting...";
+      
+      setTimeout(() => {
+        // Hide loading state
+        spinner.classList.add("d-none");
+        submitText.textContent = "Submit Attendance";
+        
+        const now = new Date();
+        const record = {
+          ecNo: ecNo,
+          studentName: studentName,
+          gender: gender,
+          mobileNo: mobileNo,
+          technicalStaff: technicalStaff,
+          coordinator: coordinator,
+          batchTiming: batchTiming,
+          time: now.toLocaleTimeString(),
+          date: now.toLocaleDateString()
+        };
+        attendanceRecords.push(record);
+
+        showResponse("✅ Attendance marked successfully!", "success");
+        
+        // Clear form
+        document.getElementById("ecNo").value = "";
+        document.getElementById("studentName").value = "";
+        document.getElementById("gender").value = "";
+        document.getElementById("mobileNo").value = "";
+        document.getElementById("technicalStaff").value = "";
+        document.getElementById("coordinator").value = "";
+        document.getElementById("batchTiming").value = "";
+        
+        renderAttendanceTable();
+      }, 1000);
+    }
+
+    function showResponse(message, type) {
+      const responseMsg = document.getElementById("responseMsg");
+      responseMsg.textContent = message;
+      responseMsg.classList.remove("d-none");
+      responseMsg.classList.add(`alert-${type}`);
+    }
+
+    // ✅ Render Attendance Table
+    function renderAttendanceTable() {
+      const tbody = document.getElementById("attendanceBody");
+      tbody.innerHTML = "";
+
+      attendanceRecords.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="align-middle">${r.ecNo}</td>
+          <td class="align-middle">${r.studentName}</td>
+          <td class="align-middle">${r.gender}</td>
+          <td class="align-middle">${r.mobileNo}</td>
+          <td class="align-middle">${r.technicalStaff}</td>
+          <td class="align-middle">${r.coordinator}</td>
+          <td class="align-middle">${r.batchTiming}</td>
+          <td class="align-middle">${r.date}</td>
+          <td class="align-middle">${r.time}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ✅ Admin Login
+    function adminLogin() {
+      const username = document.getElementById("adminUsername").value.trim();
+      const password = document.getElementById("adminPassword").value.trim();
+
+      if (username === "" || password === "") {
+        alert("⚠️ Please enter both Username and Password.");
+        return;
+      }
+
+      if (username !== "admin" || password !== "1234") {
+        alert("❌ Invalid username or password.");
+        return;
+      }
+
+      document.getElementById("loginSection").classList.add("d-none");
+      document.getElementById("adminSection").classList.remove("d-none");
+      renderAttendanceTable();
+    }
+
+    // ✅ Export PDF
+    function exportToPDF() {
+      if (attendanceRecords.length === 0) {
+        alert("⚠️ No data to export.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("Attendance Report", 14, 16);
+
+      const tableData = attendanceRecords.map(r => [
+        r.ecNo, r.studentName, r.gender, r.mobileNo, 
+        r.technicalStaff, r.coordinator, r.batchTiming, r.date, r.time
+      ]);
+      
+      doc.autoTable({
+        head: [["EC Number", "Name", "Gender", "Mobile", "Technical Staff", "Coordinator", "Batch Timing", "Date", "Time"]],
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [66, 139, 202] },
+        styles: { fontSize: 8 },
+        margin: { top: 20 }
+      });
+
+      doc.save("Attendance_Report.pdf");
+    }
+
+    // ✅ Export Excel (CSV)
+    function exportToExcel() {
+      if (attendanceRecords.length === 0) {
+        alert("⚠️ No data to export.");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,EC Number,Student Name,Gender,Mobile No,Technical Staff,Coordinator,Batch Timing,Date,Time\n";
+      attendanceRecords.forEach(r => {
+        csvContent += `${r.ecNo},${r.studentName},${r.gender},${r.mobileNo},${r.technicalStaff},${r.coordinator},${r.batchTiming},${r.date},${r.time}\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Attendance_Report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ✅ Delete All
+    function deleteAllData() {
+      if (confirm("⚠️ Are you sure you want to delete all attendance records?")) {
+        attendanceRecords = [];
+        renderAttendanceTable();
+        alert("✅ All data cleared.");
+      }
+    }
+  </script>
+</body>
+</html>
